@@ -1,0 +1,60 @@
+#!/bin/bash
+# This deploy hook gets executed after dependencies are resolved and the
+# build hook has been run but before the application has been started back
+# up again.  This script gets executed directly, so it could be python, php,
+# ruby, etc.
+
+# check for existing installation of craftbukkit
+if [ ! -d $OPENSHIFT_DATA_DIR/minecraft ]; then
+
+   # generate salt
+   salt=$( < /dev/urandom tr -dc A-Za-z0-9 | head -c25)
+   export SPACEBUKKIT_SALT=$salt
+   
+   # copy minecraft folder
+   cp -r $OPENSHIFT_REPO_DIR/minecraft $OPENSHIFT_DATA_DIR/minecraft
+   
+   # generate config with erb
+   # minecraft config
+   erb -T - $OPENSHIFT_REPO_DIR/templates/server.properties.erb > $OPENSHIFT_DATA_DIR/minecraft/server.properties
+   
+   # remote toolkit config
+   erb -T - $OPENSHIFT_REPO_DIR/templates/remote.properties.erb > $OPENSHIFT_DATA_DIR/minecraft/toolkit/remote.properties
+   
+   # spacebukkit config
+   erb -T - $OPENSHIFT_REPO_DIR/templates/configuration.yml.erb > $OPENSHIFT_DATA_DIR/minecraft/SpaceModule/configuration.yml
+
+fi
+
+# scripted installation of spacebukkit
+# configure database; database.php is part of the repository so it is replaced during deploy, this simplifies pannel updates
+erb -T - $OPENSHIFT_REPO_DIR/templates/database.php.erb > $OPENSHIFT_REPO_DIR/php/app/Config/database.php
+
+# remove install flag-file; this file indicates if the installation happened
+if [ -a $OPENSHIFT_REPO_DIR/php/app/tmp/inst.txt ]
+then
+   rm $OPENSHIFT_REPO_DIR/php/app/tmp/inst.txt
+fi
+
+# handle database  
+if [ -z "$OPENSHIFT_MYSQL_DB_HOST" ]
+then
+   echo 1>&2
+   echo "Could not find mysql database.  Please run:" 1>&2
+   echo "rhc cartridge add -a $OPENSHIFT_APP_NAME -c mysql-5.1" 1>&2
+   echo "then make a sample commit (add whitespace somewhere) and re-push" 1>&2
+   echo 1>&2
+ 
+   exit 5
+fi
+
+# check if database was imported allready
+if ! /usr/bin/mysql -u "$OPENSHIFT_MYSQL_DB_USERNAME" --password="$OPENSHIFT_MYSQL_DB_PASSWORD" -h "$OPENSHIFT_MYSQL_DB_HOST" -P "$OPENSHIFT_MYSQL_DB_PORT" -e "select * from space_servers;" "$OPENSHIFT_APP_NAME" > /dev/null 2>&1
+then
+   echo "Database schema not yet added, it will be import now."
+      
+   # import sql script
+   erb -T - $OPENSHIFT_REPO_DIR/templates/minecraft.sql.erb | /usr/bin/mysql -u "$OPENSHIFT_MYSQL_DB_USERNAME" --password="$OPENSHIFT_MYSQL_DB_PASSWORD" -h "$OPENSHIFT_MYSQL_DB_HOST" -P "$OPENSHIFT_MYSQL_DB_PORT" "$OPENSHIFT_APP_NAME" > /dev/null 2>&1   
+else
+   echo "Database already configured."
+fi

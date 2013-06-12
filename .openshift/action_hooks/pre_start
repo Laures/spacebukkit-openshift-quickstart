@@ -1,0 +1,3 @@
+#!/bin/bash
+
+tmux new -d -n "minecraft" -s "minecraft" "sh $OPENSHIFT_DATA_DIR/minecraft/rtoolkit.sh"

@@ -1,0 +1,11 @@
+restart-kick-message:Server is restarting! Come back in 1 minute :)
+toolkit-shutdown-kick-message:Server is shutting down! Come back later :)
+hold-kick-message:Server is shutting down!
+restart-time-warning:**SERVER RESTART IN %t**
+restart-warning:**SERVER IS RESTARTING**
+toolkit-shutdown-time-warning:**SERVER SHUTDOWN IN %t**
+toolkit-shutdown-warning:**SERVER IS SHUTTING DOWN**
+hold-warning:**SERVER IS SHUTTING DOWN**
+auto-save-start:**SERVER IS SAVING THE MAP**
+auto-save-complete:**MAP SAVE IS COMPLETE**
+restart-time-left:Time until next restart: %t

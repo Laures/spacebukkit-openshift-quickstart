@@ -1,0 +1,15 @@
+<?php
+
+class DATABASE_CONFIG {
+
+	public $default = array(
+		'datasource' => 'Database/Mysql',
+		'persistent' => false,
+		'host' => '<%= ENV['OPENSHIFT_MYSQL_DB_HOST'] %>',
+		'login' => '<%= ENV['OPENSHIFT_MYSQL_DB_USERNAME'] %>',
+		'password' => '<%= ENV['OPENSHIFT_MYSQL_DB_PASSWORD'] %>',
+		'database' => '<%= ENV['OPENSHIFT_APP_NAME'] %>',
+		'prefix' => '',
+		'port' => NULL
+	);
+}

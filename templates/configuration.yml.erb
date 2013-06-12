@@ -1,0 +1,24 @@
+# #                !!!ATTENTION!!!                #
+# #   IF YOU CHANGE THE SALT, YOU MUST RESTART    #
+# #  THE WRAPPER FOR THE CHANGES TO TAKE EFFECT   #
+
+General:
+  salt: <%= ENV['SPACEBUKKIT_SALT'] %>
+  worldContainer: .
+  bindIp: <%= ENV['OPENSHIFT_PHP_IP'] %>
+  backupDirectory: Backups
+  backupLogs: true
+SpaceBukkit:
+  port: 15011
+  maxJoins: 199
+  maxMessages: 199
+  maxQuits: 199
+  pingPort: 15014
+SpaceRTK:
+  port: 15012
+  pingPort: 15013
+SpaceModule:
+  type: Bukkit
+  recommended: true
+  development: false
+  artifact: <automatic>

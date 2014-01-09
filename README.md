@@ -49,3 +49,7 @@ Alternatively you can configure ssh port-forwarding using tools like [putty](htt
 Congratulations, you can connect to your server using `localhost:15000`. Have Fun.
 
 **There is a feature request for at least one public port [here](https://www.openshift.com/content/at-least-one-port-for-external-use-excluding-8080-please)! PLEASE GO AND VOTE FOR IT**
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Laures/spacebukkit-openshift-quickstart/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
